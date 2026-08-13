@@ -10,6 +10,26 @@
 
 ---
 
+## 安装
+
+需要 [Claude Code](https://claude.com/claude-code)。clone 到 skills 目录即可，无需任何依赖：
+
+```bash
+# 全局安装（所有项目都能用）
+git clone https://github.com/mayyyim/mbti-function-typing.git \
+  ~/.claude/skills/mbti-function-typing
+
+# 或只装在某个项目里
+git clone https://github.com/mayyyim/mbti-function-typing.git \
+  <你的项目>/.claude/skills/mbti-function-typing
+```
+
+装完在 Claude Code 里直接说「帮我测一下 MBTI」就会触发；也可以打 `/mbti-function-typing` 显式调用。
+
+⚠️ **目录名必须是 `mbti-function-typing`**（要和 `SKILL.md` 里的 `name:` 一致），上面的命令已经指定了，别改。
+
+---
+
 ## 为什么普通 MBTI 测试测不准
 
 不是题目不够多，是三个机制性问题：
@@ -136,7 +156,16 @@
 mbti-function-typing/
 ├── SKILL.md                              # 全部规则、题库、模板（模型读这个）
 ├── README.md                             # 本文件
+├── LICENSE                               # MIT
 └── assets/
     ├── capability-chart-template.html    # 能力图模板（条形 + 哑铃，自包含）
     └── _archive/2026-08-13/              # 已废弃的雷达图模板 + 废弃原因
 ```
+
+---
+
+## License
+
+MIT。拿去改、拿去用都行，改完不必回传。
+
+如果你调整了题库或阶梯门槛，建议在自己那份 `SKILL.md` 里记一句改了什么、为什么——这套东西的价值全部来自它可被推翻，而"当初为什么这么定"是最容易先丢掉的信息。
