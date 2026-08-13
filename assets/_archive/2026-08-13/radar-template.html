@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>荣格八维功能图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#12201C;
+    --surface:#1A2B25;
+    --line:#2C4038;
+    --brass:#C89B4A;
+    --ember:#A64B32;
+    --sage:#7A9184;
+    --bone:#E8E3D6;
+    --dim:#8FA096;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--ground);
+    color:var(--bone);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-weight:300;
+    padding:28px 20px 48px;
+    display:flex;justify-content:center;
+  }
+  .wrap{width:100%;max-width:560px}
+
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--sage);margin-bottom:10px;
+  }
+  h1{
+    font-family:'Newsreader',Georgia,serif;
+    font-weight:300;font-size:30px;line-height:1.15;letter-spacing:-.01em;
+    margin-bottom:6px;
+  }
+  h1 em{font-style:italic;color:var(--brass)}
+  .sub{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:26px}
+
+  .chart{width:100%;height:auto;display:block;margin:0 auto 8px}
+
+  .legend{
+    display:flex;gap:20px;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    letter-spacing:.08em;color:var(--dim);margin-bottom:30px;
+  }
+  .legend span{display:flex;align-items:center;gap:7px}
+  .swatch{width:16px;height:0;border-top:2px solid var(--brass)}
+  .swatch.shadow{border-top:2px dashed var(--sage)}
+
+  table{width:100%;border-collapse:collapse;margin-bottom:26px}
+  caption{
+    text-align:left;font-family:'IBM Plex Mono',monospace;
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--sage);padding-bottom:10px;
+  }
+  th,td{
+    text-align:left;padding:9px 6px;
+    border-bottom:1px solid var(--line);font-size:13px;
+  }
+  th{
+    font-family:'IBM Plex Mono',monospace;font-weight:500;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);
+  }
+  td.pos{font-family:'IBM Plex Mono',monospace;color:var(--dim);width:34px}
+  td.fn{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass);width:44px}
+  tr.shadow td.fn{color:var(--sage);font-weight:400}
+  td.val{font-family:'IBM Plex Mono',monospace;text-align:right;width:44px;color:var(--dim)}
+  td.note{color:var(--bone);font-size:12.5px;line-height:1.5}
+
+  .note-block{
+    border-left:2px solid var(--ember);
+    padding:2px 0 2px 15px;margin-bottom:22px;
+  }
+  .note-block h2{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ember);
+    margin-bottom:8px;
+  }
+  .note-block p{font-size:13.5px;line-height:1.65;color:var(--bone)}
+
+  .caveat{
+    font-size:11.5px;line-height:1.65;color:var(--dim);
+    border-top:1px solid var(--line);padding-top:16px;
+  }
+  .caveat strong{color:var(--sage);font-weight:400}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Jungian function stack</p>
+  <h1>八维功能图 · <em>INTJ</em></h1>
+  <p class="sub">Ni — Te — Fi — Se ／影子：Ne — Ti — Fe — Si<br>顶点编号为栈内位置，不是强度排名。</p>
+
+  <svg class="chart" viewBox="0 0 420 420" role="img" aria-label="八维功能雷达图">
+    <g id="grid"></g>
+    <g id="axes"></g>
+    <polygon id="shadowPoly" fill="none" stroke="#7A9184" stroke-width="1.4"
+             stroke-dasharray="4 4" opacity=".85"/>
+    <polygon id="mainPoly" fill="#C89B4A" fill-opacity=".13"
+             stroke="#C89B4A" stroke-width="2"/>
+    <g id="dots"></g>
+    <g id="labels"></g>
+  </svg>
+
+  <div class="legend">
+    <span><i class="swatch"></i>意识四位</span>
+    <span><i class="swatch shadow"></i>影子四位</span>
+  </div>
+
+  <table>
+    <caption>功能位与观察</caption>
+    <thead><tr><th>位</th><th>功能</th><th>值</th><th>观察</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="note-block">
+    <h2>结构缺口</h2>
+    <p>第三功能 Fi 有否决权、无发起权：能说"不是这个"，不产生"我要那个"。正向方向感全部由 Ni-Te 供给，所以重大选择回头看都能用合理性解释得通。</p>
+  </div>
+
+  <div class="note-block">
+    <h2>未消化的异常</h2>
+    <p>Se（第四位）的实际熟练度高于 Fi（第三位），与理论顺序倒挂。判断为后天发展顺序压过先天位置顺序——劣势功能有可操作路径，第三功能没有。保留类型判断，异常留档。</p>
+  </div>
+
+  <p class="caveat">
+    <strong>关于这些数字。</strong>它们不是测量值。原始判断是序数的（谁在第几位）加上定性的（整合到什么程度），数值只是为了让形状可读而做的一次转换。可比较的是形状的偏斜和意识/影子两层的间距，不是任何单个数字。
+  </p>
+
+</div>
+
+<script>
+const DATA = [
+  {fn:'Ni', pos:1, val:90, note:'刚性低，能主动推翻自己的判断'},
+  {fn:'Te', pos:2, val:75, note:'外部结构化，无对慢者的轻蔑'},
+  {fn:'Fi', pos:3, val:55, note:'仅否决权，缺发起权'},
+  {fn:'Se', pos:4, val:45, note:'已被主动养起来，需有意识调动'},
+  {fn:'Ne', pos:5, val:35, shadow:true, note:'容纳反例时启用'},
+  {fn:'Ti', pos:6, val:30, shadow:true, note:'工程训练带来的局部强化'},
+  {fn:'Fe', pos:7, val:22, shadow:true, note:'情绪不自动灌入'},
+  {fn:'Si', pos:8, val:18, shadow:true, note:'身体信号靠训练接收'}
+];
+
+const CX=210, CY=214, R=132, N=8;
+const ang = i => (i*2*Math.PI/N) - Math.PI/2;
+const pt  = (i,r) => [CX + r*Math.cos(ang(i)), CY + r*Math.sin(ang(i))];
+
+const grid=document.getElementById('grid');
+[.25,.5,.75,1].forEach(f=>{
+  const p=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  p.setAttribute('points',DATA.map((_,i)=>pt(i,R*f).join(',')).join(' '));
+  p.setAttribute('fill','none');
+  p.setAttribute('stroke','#2C4038');
+  p.setAttribute('stroke-width', f===1?1.2:.8);
+  grid.appendChild(p);
+});
+
+const axes=document.getElementById('axes');
+DATA.forEach((_,i)=>{
+  const [x,y]=pt(i,R);
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',CX);l.setAttribute('y1',CY);
+  l.setAttribute('x2',x);l.setAttribute('y2',y);
+  l.setAttribute('stroke','#2C4038');l.setAttribute('stroke-width','.8');
+  axes.appendChild(l);
+});
+
+const scale = v => R * (v/100);
+const mainPts   = DATA.map((d,i)=>pt(i, d.shadow?0:scale(d.val)));
+const shadowPts = DATA.map((d,i)=>pt(i, scale(d.val)));
+
+document.getElementById('mainPoly')
+  .setAttribute('points', DATA.map((d,i)=> d.shadow?null:pt(i,scale(d.val)).join(','))
+  .filter(Boolean).join(' '));
+document.getElementById('shadowPoly')
+  .setAttribute('points', shadowPts.map(p=>p.join(',')).join(' '));
+
+const dots=document.getElementById('dots');
+DATA.forEach((d,i)=>{
+  const [x,y]=pt(i,scale(d.val));
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r', d.shadow?2.4:3.4);
+  c.setAttribute('fill', d.shadow?'#7A9184':'#C89B4A');
+  dots.appendChild(c);
+});
+
+const labels=document.getElementById('labels');
+DATA.forEach((d,i)=>{
+  const [x,y]=pt(i,R+30);
+  const g=document.createElementNS('http://www.w3.org/2000/svg','text');
+  g.setAttribute('x',x);g.setAttribute('y',y);
+  g.setAttribute('text-anchor','middle');
+  g.setAttribute('font-family',"'IBM Plex Mono',monospace");
+  g.setAttribute('font-size','14');
+  g.setAttribute('font-weight','500');
+  g.setAttribute('fill', d.shadow?'#7A9184':'#C89B4A');
+  g.textContent=d.fn;
+  labels.appendChild(g);
+
+  const n=document.createElementNS('http://www.w3.org/2000/svg','text');
+  n.setAttribute('x',x);n.setAttribute('y',y+13);
+  n.setAttribute('text-anchor','middle');
+  n.setAttribute('font-family',"'IBM Plex Mono',monospace");
+  n.setAttribute('font-size','9');
+  n.setAttribute('fill','#5E7268');
+  n.textContent=d.pos;
+  labels.appendChild(n);
+});
+
+document.getElementById('rows').innerHTML = DATA.map(d=>`
+  <tr class="${d.shadow?'shadow':''}">
+    <td class="pos">${d.pos}</td>
+    <td class="fn">${d.fn}</td>
+    <td class="val">${d.val}</td>
+    <td class="note">${d.note}</td>
+  </tr>`).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>荣格八维功能能力图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#12201C;
+    --surface:#1A2B25;
+    --line:#2C4038;
+    --brass:#C89B4A;
+    --ember:#A64B32;
+    --sage:#7A9184;
+    --bone:#E8E3D6;
+    --dim:#8FA096;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--ground);
+    color:var(--bone);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-weight:300;
+    padding:28px 20px 48px;
+    display:flex;justify-content:center;
+  }
+  .wrap{width:100%;max-width:620px}
+
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--sage);margin-bottom:10px;
+  }
+  h1{
+    font-family:'Newsreader',Georgia,serif;
+    font-weight:300;font-size:30px;line-height:1.15;letter-spacing:-.01em;
+    margin-bottom:6px;
+  }
+  h1 em{font-style:italic;color:var(--brass)}
+  .sub{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:8px}
+  .stamp{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    letter-spacing:.06em;color:var(--sage);margin-bottom:30px;
+  }
+
+  h2.section{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--sage);
+    padding-bottom:14px;margin-top:34px;
+    border-bottom:1px solid var(--line);margin-bottom:18px;
+  }
+  h2.section span{color:var(--dim);letter-spacing:.04em;text-transform:none;font-weight:400}
+
+  /* ---------- 主图：能力条形 ---------- */
+  .group-label{
+    font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+    margin:14px 0 8px;
+  }
+  .group-label:first-of-type{margin-top:0}
+
+  .bar-row{
+    display:grid;
+    grid-template-columns:52px 1fr 128px;
+    align-items:center;gap:10px;margin-bottom:7px;
+  }
+  .bar-fn{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;
+    color:var(--brass);
+  }
+  .bar-fn.shadow{color:var(--sage);font-weight:400}
+  .bar-fn i{font-style:normal;font-size:9.5px;color:var(--dim);margin-left:3px}
+
+  .track{
+    position:relative;height:16px;background:var(--surface);
+    border:1px solid var(--line);border-radius:2px;overflow:hidden;
+  }
+  .track .tick{
+    position:absolute;top:0;bottom:0;width:1px;background:var(--line);
+  }
+  .fill{
+    position:absolute;top:0;bottom:0;left:0;border-radius:1px;
+    background:var(--brass);opacity:.85;
+  }
+  .fill.shadow{background:var(--sage)}
+  .fill.grasp{background:var(--ember)}
+  .fill.zero{background:none;border-left:2px solid var(--line)}
+
+  .bar-tier{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    color:var(--dim);line-height:1.35;
+  }
+  .bar-tier b{color:var(--bone);font-weight:500;margin-right:5px}
+
+  .scale-key{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.9;
+    color:var(--dim);margin-top:16px;
+    border-top:1px solid var(--line);padding-top:12px;
+  }
+  .scale-key b{color:var(--sage);font-weight:500}
+  .scale-key em{font-style:normal;color:var(--ember)}
+
+  /* ---------- 副图：位置 vs 能力 ---------- */
+  .dumb-row{
+    display:grid;
+    grid-template-columns:52px 1fr 118px;
+    align-items:center;gap:10px;margin-bottom:9px;
+  }
+  .lane{
+    position:relative;height:18px;
+  }
+  .lane .axis{
+    position:absolute;left:0;right:0;top:8px;height:1px;background:var(--line);
+  }
+  .lane .gridline{
+    position:absolute;top:2px;height:14px;width:1px;background:var(--line);
+  }
+  .lane .link{position:absolute;top:8px;height:2px;}
+  .lane .link.over{background:var(--sage)}
+  .lane .link.under{background:var(--ember)}
+  .lane .dot{
+    position:absolute;top:4px;width:9px;height:9px;border-radius:50%;
+    margin-left:-4.5px;
+  }
+  .lane .dot.expect{background:var(--ground);border:1.5px solid var(--dim)}
+  .lane .dot.actual{background:var(--brass);border:1.5px solid var(--brass)}
+  .lane .dot.actual.shadow{background:var(--sage);border-color:var(--sage)}
+
+  .dumb-note{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)}
+  .dumb-note.flag{color:var(--ember)}
+  .dumb-note.over{color:var(--sage)}
+
+  .axis-key{
+    display:grid;grid-template-columns:52px 1fr 118px;gap:10px;
+    font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--dim);
+    margin-top:2px;
+  }
+  .axis-key .marks{display:flex;justify-content:space-between}
+
+  table{width:100%;border-collapse:collapse;margin-top:14px}
+  th,td{
+    text-align:left;padding:9px 6px;
+    border-bottom:1px solid var(--line);font-size:13px;vertical-align:top;
+  }
+  th{
+    font-family:'IBM Plex Mono',monospace;font-weight:500;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);
+  }
+  td.pos{font-family:'IBM Plex Mono',monospace;color:var(--dim);width:34px}
+  td.fn{font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass);width:44px}
+  tr.shadow td.fn{color:var(--sage);font-weight:400}
+  td.cap{font-family:'IBM Plex Mono',monospace;text-align:center;width:40px;color:var(--bone)}
+  td.src{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--dim);width:70px}
+  td.note{color:var(--bone);font-size:12.5px;line-height:1.5}
+
+  .note-block{
+    border-left:2px solid var(--ember);
+    padding:2px 0 2px 15px;margin:26px 0 22px;
+  }
+  .note-block h3{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ember);
+    margin-bottom:8px;
+  }
+  .note-block p{font-size:13.5px;line-height:1.65;color:var(--bone)}
+
+  .caveat{
+    font-size:11.5px;line-height:1.7;color:var(--dim);
+    border-top:1px solid var(--line);padding-top:16px;margin-top:26px;
+  }
+  .caveat strong{color:var(--sage);font-weight:400}
+  .caveat + .caveat{border-top:none;padding-top:0;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Jungian function stack · capability</p>
+  <h1>八维功能能力图 · <em>INTJ</em></h1>
+  <p class="sub">Ni — Te — Fi — Se ／影子：Ne — Ti — Fe — Si<br>
+     位次来自定型（序数）；能力档来自行为锚定阶梯（0–4），两者互相独立。</p>
+  <p class="stamp">测于 2026-08-13 · 能力档是当前状态，不是稳定特质</p>
+
+  <h2 class="section">主图 · 能力档 <span>每个功能各自对照同一套行为里程碑，可横向比较</span></h2>
+
+  <div id="bars"></div>
+
+  <div class="scale-key">
+    <b>0</b> 不可用：主动回避，或想不出一次<br>
+    <b>1</b> <em>压力下被动出现（失控，不计为能力）</em><br>
+    <b>2</b> 被要求时能调用，费力、需要恢复<br>
+    <b>3</b> 能自发调用且待得住<br>
+    <b>4</b> 压力下不掉，且能向别人讲清怎么做
+  </div>
+
+  <h2 class="section">这八个功能各管什么 <span>用行为说，不用术语定义</span></h2>
+
+  <table>
+    <thead><tr><th>位</th><th>功能</th><th>它管什么</th></tr></thead>
+    <tbody id="gloss"></tbody>
+  </table>
+
+  <p class="scale-key" style="border-top:none;padding-top:6px">
+    <b>位次</b>＝先天倾向顺序，不是强弱排名：第 1 位最先启动，第 8 位最不自然。<br>
+    <b>意识四位（1–4）</b>能有意识调用、也认得出"这是我"；<b>影子四位（5–8）</b>用起来费劲，压力大时可能以失控形式冒出来。<br>
+    位次是<b>顺序</b>，能力档是<b>现在好不好用</b>——两件独立的事，这也是副图存在的理由。
+  </p>
+
+  <h2 class="section">副图 · 位次期望 vs 实测能力 <span>连线越长，落差越大</span></h2>
+
+  <div id="dumbbells"></div>
+  <div class="axis-key">
+    <span></span>
+    <span class="marks"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span></span>
+    <span></span>
+  </div>
+
+  <div class="scale-key">
+    ○ 空心＝按栈内位次的期望档（位1→4，位2→3，位3–4→2，位5–6→1，位7–8→0）<br>
+    ● 实心＝实测能力档 ／ 连线 <span style="color:var(--sage)">绿＝超出期望</span>
+    ／ <span style="color:var(--ember)">红＝低于期望</span>
+  </div>
+
+  <div id="inversions"></div>
+
+  <h2 class="section">逐位依据</h2>
+
+  <table>
+    <thead><tr><th>位</th><th>功能</th><th>档</th><th>题</th><th>观察（具体事件）</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="note-block">
+    <h3>结构缺口</h3>
+    <p>第三功能 Fi 停在 1 档：只在压力下被动出现，能说"不是这个"，不产生"我要那个"。正向方向感全部由 Ni-Te 供给，所以重大选择回头看都能用合理性解释得通。</p>
+  </div>
+
+  <p class="caveat">
+    <strong>这些档位是什么。</strong>它们是<b>标准参照</b>的——每一档对应一组事先写定的可观察行为里程碑，判定要求举出具体事件和时间窗，举不出就降一档。它们<b>不是常模参照</b>：八维没有人群常模，所以这里的"高"只意味着"在这套阶梯上到了第几档"，<b>不能</b>读成"比多少人强"。
+  </p>
+  <p class="caveat">
+    <strong>位次和能力是两件事。</strong>位次是定型测出的先天倾向顺序，能力是当前熟练度。两者不一致很常见（劣势功能有可操作路径、第三功能没有），副图里的落差不是错误，是这份分析最该看的部分。
+  </p>
+  <p class="caveat">
+    <strong>边界。</strong>八维缺乏可靠的心理测量学基础。这是一个有用的描述性透镜，不是关于这个人的事实。
+  </p>
+
+</div>
+
+<script>
+// ─── 只改这一段 ───────────────────────────────────────────────
+// cap: 0–4 能力档（行为锚定阶梯测出，不是位次换算）
+// src: 依据哪道题（C1–C8 / D3 / D5 / S2…），写不出来就不该有这个档
+const DATA = [
+  {fn:'Ni', pos:1, cap:4, src:'C1',    note:'长期判断被推翻后主动改做法（D1），疲劳时建模能力不掉'},
+  {fn:'Te', pos:2, cap:3, src:'C2',    note:'自发重排他人流程且待得住，无对慢者的轻蔑（D2）'},
+  {fn:'Fi', pos:3, cap:1, src:'D3/D4', note:'仅否决权：条件全对却拖着绕开；说不出"我要什么"'},
+  {fn:'Se', pos:4, cap:2, src:'D5/S2', note:'能被要求调动（每周运动），但结束即退出，需恢复'},
+  {fn:'Ne', pos:5, cap:1, shadow:true, src:'C5', note:'仅在被迫容纳反例时出现，不自发'},
+  {fn:'Ti', pos:6, cap:2, shadow:true, src:'C6', note:'工程训练带来的局部强化，被要求时可用'},
+  {fn:'Fe', pos:7, cap:0, shadow:true, src:'C7', note:'主动回避组局与场域维护，想不出一次自发的'},
+  {fn:'Si', pos:8, cap:0, shadow:true, src:'C8', note:'身体信号靠外部提醒接收，无自发调用'}
+];
+const TIER = [
+  '不可用',
+  '压力下被动出现',
+  '被要求时能调用',
+  '自发调用且待得住',
+  '压力下不掉，能示范'
+];
+// 位次 → 期望档（透明规则，改这里图上说明也要一起改）
+const EXPECT = {1:4, 2:3, 3:2, 4:2, 5:1, 6:1, 7:0, 8:0};
+// 功能释义：行为语言版，**不许删、不许换成教科书定义**。
+// 读者（包括三个月后的本人）不记得这些字母是什么意思。
+const GLOSS = {
+  Ni:'把零散信息在心里收成一个整体判断，然后"就知道"事情会往哪儿走。产出是结论，往往讲不清步骤',
+  Ne:'从一个点往外岔出多种可能性，越想分支越多。产出是一堆选项，难在收住',
+  Si:'调取既往经验和具体细节，按验证过的流程走。依据是"上回就是这么烂的"',
+  Se:'接收当下的身体和感官信息：冷热、疲劳、味道、场面上正在发生什么',
+  Ti:'检查一套东西内部说不说得通、自不自洽。标准在自己心里，没人用也要它对',
+  Te:'把事情排成流程、定分工、推着落地。标准在外部结果，跑得起来才算对',
+  Fi:'判断"这件事对我是不是对的"，产出"我要这个／这不对"。范围特定化、有选择',
+  Fe:'接收并调节场里的情绪、把气氛接回来。范围是场域性的，对不相干的人也开机'
+};
+// ─────────────────────────────────────────────────────────────
+
+const pct = c => (c / 4) * 100;
+
+/* 主图：能力条形 */
+const bars = document.getElementById('bars');
+let lastGroup = null;
+DATA.forEach(d => {
+  const group = d.shadow ? '影子四位' : '意识四位';
+  if (group !== lastGroup) {
+    const g = document.createElement('p');
+    g.className = 'group-label';
+    g.textContent = group;
+    bars.appendChild(g);
+    lastGroup = group;
+  }
+  const row = document.createElement('div');
+  row.className = 'bar-row';
+
+  const fn = document.createElement('span');
+  fn.className = 'bar-fn' + (d.shadow ? ' shadow' : '');
+  fn.innerHTML = d.fn + '<i>' + d.pos + '位</i>';
+
+  const track = document.createElement('div');
+  track.className = 'track';
+  [1,2,3].forEach(t => {
+    const tk = document.createElement('span');
+    tk.className = 'tick';
+    tk.style.left = pct(t) + '%';
+    track.appendChild(tk);
+  });
+  const fill = document.createElement('span');
+  fill.className = 'fill'
+    + (d.cap === 0 ? ' zero' : '')
+    + (d.cap === 1 ? ' grasp' : '')
+    + (d.shadow && d.cap > 1 ? ' shadow' : '');
+  fill.style.width = d.cap === 0 ? '2px' : pct(d.cap) + '%';
+  track.appendChild(fill);
+
+  const tier = document.createElement('span');
+  tier.className = 'bar-tier';
+  tier.innerHTML = '<b>' + d.cap + '</b>' + TIER[d.cap];
+
+  row.append(fn, track, tier);
+  bars.appendChild(row);
+});
+
+/* 副图：位次期望 vs 实测能力 */
+const dumb = document.getElementById('dumbbells');
+DATA.forEach(d => {
+  const exp = EXPECT[d.pos];
+  const delta = d.cap - exp;
+
+  const row = document.createElement('div');
+  row.className = 'dumb-row';
+
+  const fn = document.createElement('span');
+  fn.className = 'bar-fn' + (d.shadow ? ' shadow' : '');
+  fn.innerHTML = d.fn + '<i>' + d.pos + '位</i>';
+
+  const lane = document.createElement('div');
+  lane.className = 'lane';
+  const axis = document.createElement('span');
+  axis.className = 'axis';
+  lane.appendChild(axis);
+  [0,1,2,3,4].forEach(t => {
+    const g = document.createElement('span');
+    g.className = 'gridline';
+    g.style.left = pct(t) + '%';
+    lane.appendChild(g);
+  });
+  if (delta !== 0) {
+    const link = document.createElement('span');
+    link.className = 'link ' + (delta > 0 ? 'over' : 'under');
+    link.style.left = pct(Math.min(exp, d.cap)) + '%';
+    link.style.width = (pct(Math.abs(delta))) + '%';
+    lane.appendChild(link);
+  }
+  const de = document.createElement('span');
+  de.className = 'dot expect';
+  de.style.left = pct(exp) + '%';
+  const da = document.createElement('span');
+  da.className = 'dot actual' + (d.shadow ? ' shadow' : '');
+  da.style.left = pct(d.cap) + '%';
+  lane.append(de, da);
+
+  const note = document.createElement('span');
+  note.className = 'dumb-note' + (delta < 0 ? ' flag' : delta > 0 ? ' over' : '');
+  note.textContent = delta === 0
+    ? '与位次一致'
+    : (delta > 0 ? '高出期望 +' + delta + ' 档' : '低于期望 ' + delta + ' 档');
+
+  row.append(fn, lane, note);
+  dumb.appendChild(row);
+});
+
+/* 自动检出倒挂：位次靠前但能力反而更低 */
+const inv = [];
+for (let i = 0; i < DATA.length; i++) {
+  for (let j = i + 1; j < DATA.length; j++) {
+    if (DATA[i].cap < DATA[j].cap) {
+      inv.push(DATA[i].fn + '（' + DATA[i].pos + '位，' + DATA[i].cap + '档）'
+             + ' ← ' + DATA[j].fn + '（' + DATA[j].pos + '位，' + DATA[j].cap + '档）');
+    }
+  }
+}
+if (inv.length) {
+  const box = document.createElement('div');
+  box.className = 'note-block';
+  box.innerHTML = '<h3>位次与能力倒挂 ' + inv.length + ' 处</h3><p>'
+    + inv.join('<br>')
+    + '<br><br>倒挂不改类型判断。位次是先天倾向顺序，能力是当前熟练度——'
+    + '劣势功能有明确可操作路径（身体、运动、感官）能被训练，第三功能缺方法论、很难练，'
+    + '所以后天顺序压过先天顺序是常见形态。逐条解释写进报告 §七。</p>';
+  document.getElementById('inversions').appendChild(box);
+}
+
+/* 八个功能各管什么 */
+document.getElementById('gloss').innerHTML = DATA.map(d => `
+  <tr class="${d.shadow ? 'shadow' : ''}">
+    <td class="pos">${d.pos}</td>
+    <td class="fn">${d.fn}</td>
+    <td class="note">${GLOSS[d.fn] || ''}</td>
+  </tr>`).join('');
+
+/* 逐位依据表 */
+document.getElementById('rows').innerHTML = DATA.map(d => `
+  <tr class="${d.shadow ? 'shadow' : ''}">
+    <td class="pos">${d.pos}</td>
+    <td class="fn">${d.fn}</td>
+    <td class="cap">${d.cap}</td>
+    <td class="src">${d.src || '未测'}</td>
+    <td class="note">${d.note || ''}</td>
+  </tr>`).join('');
+</script>
+</body>
+</html>
